@@ -1,0 +1,32 @@
+# 模型文件（太大，不入库，首次运行自动下载）
+embedding_models/
+laya_models/
+*.bin
+*.safetensors
+*.onnx
+*.pt
+*.pth
+
+# 运行时输出
+run_*/
+output_*/
+*.npy
+*.pkl
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# OS 文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

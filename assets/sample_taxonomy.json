@@ -1,0 +1,29 @@
+{
+  "version": "demo-v1",
+  "business_context": "内置中文用户原声演示；仅用于验证流程，不代表真实业务标签体系",
+  "labels": [
+    {"label_id":"L1_DELIVERY","parent_id":null,"level":1,"name":"履约问题","definition":"订单从接单到完成过程中的配送时效或交付状态异常","include":["配送超时","未收到餐"],"exclude":["商品本身质量问题"],"positive_examples":["等了快两小时餐还没送到"],"negative_examples":["收到的蛋糕已经压坏了"],"business_action":"路由履约治理并监控配送异常","status":"active"},
+    {"label_id":"L2_DELAY","parent_id":"L1_DELIVERY","level":2,"name":"配送超时","definition":"订单仍在配送但明显超过合理等待时间","include":["骑手长时间未移动","等待时间过长"],"exclude":["状态显示送达但实际未收到"],"positive_examples":["晚了一个多小时"],"negative_examples":["订单显示已送达但没收到"],"business_action":"核查配送链路时效","status":"active"},
+    {"label_id":"L3_LONG_DELAY","parent_id":"L2_DELAY","level":3,"name":"长时间未送达","definition":"配送等待时间显著过长且订单尚未完成","include":["超过一小时未送达"],"exclude":["已经显示送达"],"positive_examples":["等了快两小时餐还没送到"],"negative_examples":["骑手点了送达"],"business_action":"识别严重超时订单","status":"active"},
+    {"label_id":"L2_MISSING","parent_id":"L1_DELIVERY","level":2,"name":"送达状态异常","definition":"系统或骑手显示送达但用户未收到商品","include":["虚假送达","显示送达未收到"],"exclude":["订单仍在配送"],"positive_examples":["显示已送达但根本没有收到餐"],"negative_examples":["骑手一直没动"],"business_action":"核查虚假送达或丢失","status":"active"},
+    {"label_id":"L3_FALSE_DELIVERY","parent_id":"L2_MISSING","level":3,"name":"显示送达但未收到","definition":"配送状态已完成而用户明确表示未收到","include":["提前点送达","餐品未见"],"exclude":["普通配送超时"],"positive_examples":["人和餐都没看见"],"negative_examples":["什么时候能到"],"business_action":"进入送达真实性核查","status":"active"},
+
+    {"label_id":"L1_MERCHANT","parent_id":null,"level":1,"name":"商家服务问题","definition":"商家或店员的响应、沟通与服务行为不符合预期","include":["不回复","态度恶劣","不当施压"],"exclude":["配送员问题","商品质量"],"positive_examples":["问了三遍都没人理"],"negative_examples":["餐还没送到"],"business_action":"路由商家服务治理","status":"active"},
+    {"label_id":"L2_NO_RESPONSE","parent_id":"L1_MERCHANT","level":2,"name":"商家不响应","definition":"用户联系商家后长时间或多次未获得回复","include":["不回复消息","无人回应"],"exclude":["已经回复但态度差"],"positive_examples":["商家一直不回复消息"],"negative_examples":["店员态度特别恶劣"],"business_action":"监控商家响应及时性","status":"active"},
+    {"label_id":"L3_NO_REPLY","parent_id":"L2_NO_RESPONSE","level":3,"name":"多次联系无回复","definition":"用户多次尝试联系商家仍未得到回应","include":["问了多次没人理"],"exclude":["仅一次短时等待"],"positive_examples":["问了三遍都没人理"],"negative_examples":["店员一直指责我"],"business_action":"触发商家响应治理","status":"active"},
+    {"label_id":"L2_BAD_CONDUCT","parent_id":"L1_MERCHANT","level":2,"name":"商家不当行为","definition":"商家存在态度恶劣、推诿或以好评为条件等不当行为","include":["好评胁迫","辱骂指责"],"exclude":["单纯未回复"],"positive_examples":["不给好评就不处理问题"],"negative_examples":["商家一直不回复"],"business_action":"进入商家行为治理","status":"active"},
+    {"label_id":"L3_BAD_ATTITUDE","parent_id":"L2_BAD_CONDUCT","level":3,"name":"态度恶劣或施压","definition":"商家以不当语言、推诿或利益条件向用户施压","include":["态度恶劣","好评胁迫"],"exclude":["普通响应慢"],"positive_examples":["店员态度特别恶劣"],"negative_examples":["联系商家半天没有回应"],"business_action":"评估处罚或教育商家","status":"active"},
+
+    {"label_id":"L1_PRODUCT","parent_id":null,"level":1,"name":"商品质量问题","definition":"商品实体的完好程度、耐用性、做工或品质不符合预期","include":["破损","做工粗糙","使用即损坏"],"exclude":["仅退款进度问题"],"positive_examples":["收到的蛋糕已经压坏了"],"negative_examples":["退款申请还没到账"],"business_action":"路由商品质量治理","status":"active"},
+    {"label_id":"L2_DAMAGE","parent_id":"L1_PRODUCT","level":2,"name":"商品破损","definition":"商品到手时存在碎裂、破口或明显物理损伤","include":["压坏","碎裂","破口"],"exclude":["外观完好但耐用性差"],"positive_examples":["破了一个大口子"],"negative_examples":["用了一次就坏了"],"business_action":"核查包装与配送损伤","status":"active"},
+    {"label_id":"L3_BROKEN","parent_id":"L2_DAMAGE","level":3,"name":"到货即破损","definition":"用户收货时商品已经存在明显破损","include":["收到时已碎"],"exclude":["使用后损坏"],"positive_examples":["盒子里面全碎了"],"negative_examples":["用了一次就坏了"],"business_action":"支持破损售后并追查链路","status":"active"},
+    {"label_id":"L2_POOR_QUALITY","parent_id":"L1_PRODUCT","level":2,"name":"品质低劣","definition":"商品做工、耐用性或实际品质明显低于合理预期","include":["做工粗糙","首次使用即损坏"],"exclude":["运输造成的外观破损"],"positive_examples":["用了一次就坏了"],"negative_examples":["蛋糕已经压坏了"],"business_action":"监控商品品质与宣传一致性","status":"active"},
+    {"label_id":"L3_POOR_WORKMANSHIP","parent_id":"L2_POOR_QUALITY","level":3,"name":"做工或耐用性差","definition":"商品做工粗糙或正常首次使用即损坏","include":["做工粗糙","用一次就坏"],"exclude":["配送挤压造成破损"],"positive_examples":["实物做工粗糙"],"negative_examples":["盒子里面全碎了"],"business_action":"定位低品质商品与供给","status":"active"},
+
+    {"label_id":"L1_AFTERSALE","parent_id":null,"level":1,"name":"售后问题","definition":"退款、退货或售后申请处理过程中的异常","include":["退款未到账","退货被拒"],"exclude":["仅咨询配送"],"positive_examples":["退款申请三天了还没到账"],"negative_examples":["骑手一直没动"],"business_action":"路由售后治理","status":"active"},
+    {"label_id":"L2_REFUND_DELAY","parent_id":"L1_AFTERSALE","level":2,"name":"退款到账延迟","definition":"退款已申请或平台显示已退，但资金尚未到账","include":["退款未到账","银行卡未收到"],"exclude":["退货申请未通过"],"positive_examples":["银行卡一直没有收到钱"],"negative_examples":["拒绝我的退货申请"],"business_action":"核查退款链路与到账时效","status":"active"},
+    {"label_id":"L3_MONEY_NOT_RECEIVED","parent_id":"L2_REFUND_DELAY","level":3,"name":"退款资金未收到","definition":"退款状态存在但用户支付账户未收到资金","include":["银行卡未到账"],"exclude":["尚未提交退款"],"positive_examples":["银行卡一直没有收到钱"],"negative_examples":["商家拒绝退货"],"business_action":"核对支付渠道退款状态","status":"active"},
+    {"label_id":"L2_RETURN_BLOCKED","parent_id":"L1_AFTERSALE","level":2,"name":"退货申请受阻","definition":"用户提出退货后被拒绝或长时间未审核","include":["拒绝退货","不审核"],"exclude":["退款已发起但未到账"],"positive_examples":["商家一直卡着不审核"],"negative_examples":["退款申请三天了还没到账"],"business_action":"核查退货规则与商家处理","status":"active"},
+    {"label_id":"L3_RETURN_REJECTED","parent_id":"L2_RETURN_BLOCKED","level":3,"name":"退货被拒或未审核","definition":"商家拒绝退货申请或未在合理时间内审核","include":["拒绝申请","卡着不审核"],"exclude":["退款到账慢"],"positive_examples":["拒绝我的退货申请"],"negative_examples":["银行卡一直没有收到钱"],"business_action":"进入售后争议复核","status":"active"}
+  ]
+}
